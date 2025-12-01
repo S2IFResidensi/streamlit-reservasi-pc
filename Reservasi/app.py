@@ -113,8 +113,9 @@ def get_available_computers(current_date, current_time):
         SELECT computer_name FROM reservations
         WHERE status='APPROVED'
         AND date(?) BETWEEN date(start_date) AND date(end_date)
-    """, (current_date))
-
+        AND time(?) BETWEEN time(start_time) AND time(end_time)
+    """, (current_date, current_time))
+    
     booked_computers = [row[0] for row in c.fetchall()]
     conn.close()
 
@@ -539,6 +540,7 @@ if st.session_state.logged_in and st.session_state.role == "admin":
 
 
     st.markdown("---")
+
 
 
 
