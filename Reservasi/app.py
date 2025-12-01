@@ -379,9 +379,7 @@ if st.session_state.logged_in and st.session_state.role == "user":
     # Baris kedua: pilih komputer, sejajar dengan jam selesai
     col1, col2 = st.columns([2, 2])
     with col1:
-        st.write("")  # kosong, agar komputer muncul di kanan
-    with col2:
-        if isinstance(tanggal_range, (list, tuple)) and len(tanggal_range) == 2:
+                if isinstance(tanggal_range, (list, tuple)) and len(tanggal_range) == 2:
             start_date, end_date = tanggal_range
             available_computers = get_available_computers_for_range(
                 start_date.isoformat(),
@@ -395,8 +393,8 @@ if st.session_state.logged_in and st.session_state.role == "user":
     
         computer_name = st.selectbox("Pilih Komputer", available_computers)
 
-
-
+    with col2:
+        st.write("")  # kosong, agar komputer muncul di kanan
 
     if st.button("Ajukan Reservasi"):
         if end_date < start_date:
@@ -599,6 +597,7 @@ if st.session_state.logged_in and st.session_state.role == "admin":
 
 
     st.markdown("---")
+
 
 
 
