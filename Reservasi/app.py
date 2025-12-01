@@ -124,6 +124,27 @@ def get_available_computers(current_date, current_time):
     available = [pc for pc in all_computers if pc not in booked_computers]
     return available
 
+def get_available_computers_for_range(start_date, end_date, start_time, end_time):
+    conn = get_conn()
+    c = conn.cursor()
+
+    c.execute("""
+        SELECT computer_name FROM reservations
+        WHERE status='APPROVED'
+        AND NOT (
+            date(end_date) < date(?) OR date(start_date) > date(?)
+            OR time(end_time) <= time(?) OR time(start_time) >= time(?)
+        )
+    """, (start_date, end_date, start_time, end_time))
+    
+    booked_computers = [row[0] for row in c.fetchall()]
+    conn.close()
+
+    all_computers = ["S2IF-1", "S2IF-2", "S2IF-5", "S2IF-6", "S2IF-7", "S2IF-8", "S2IF-9"]
+    available = [pc for pc in all_computers if pc not in booked_computers]
+    return available
+
+
 # Tambahkan data spesifikasi komputer
 COMPUTER_SPECS = {
     "S2IF-1": "Quadro RTX 6000| 12th Gen Intel(R) Core(TM) i9-12900 3.20 GHz | RAM 32GB",
@@ -342,26 +363,33 @@ if st.session_state.logged_in and st.session_state.role == "user":
 
     st.header("Menu User - Reservasi Rentang Tanggal + Jam")
 
+    # col1, col2 = st.columns(2)
     col1, col2 = st.columns(2)
     with col1:
-        computer_name = st.selectbox(
-            "Pilih Komputer",
-            ["S2IF-1", "S2IF-2", "S2IF-5", "S2IF-6", "S2IF-7", "S2IF-8", "S2IF-9"]
-        )
         tanggal_range = st.date_input(
             "Pilih rentang tanggal (mulai - selesai)",
             value=(date.today(), date.today())
         )
+    
     with col2:
         jam_mulai = st.time_input("Jam mulai", value=time(0, 0))
         jam_selesai = st.time_input("Jam selesai", value=time(23, 59))
-
-    # Pastikan harus ada 2 tanggal (start & end)
+    
+    # Pastikan user memilih dua tanggal
     if isinstance(tanggal_range, (list, tuple)) and len(tanggal_range) == 2:
         start_date, end_date = tanggal_range
+        available_computers = get_available_computers_for_range(
+            start_date.isoformat(),
+            end_date.isoformat(),
+            jam_mulai.strftime("%H:%M"),
+            jam_selesai.strftime("%H:%M")
+        )
     else:
         st.warning("⚠ Pilih rentang tanggal (mulai & selesai)!")
         st.stop()
+
+# Pilih komputer dari yang tersedia
+computer_name = st.selectbox("Pilih Komputer", available_computers)
 
     if st.button("Ajukan Reservasi"):
         if end_date < start_date:
@@ -564,6 +592,7 @@ if st.session_state.logged_in and st.session_state.role == "admin":
 
 
     st.markdown("---")
+
 
 
 
