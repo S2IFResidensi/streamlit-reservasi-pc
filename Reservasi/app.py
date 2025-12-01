@@ -429,7 +429,7 @@ if st.session_state.logged_in and st.session_state.role == "user":
             </div>
             """, unsafe_allow_html=True)
     else:
-        st.info("Belum ada reservasi untuk komputer ini.")
+        st.warning("Belum ada reservasi untuk komputer ini.")
 
     # # ---- RESERVASI SAYA ---- #
     # st.subheader("Reservasi saya")
@@ -592,6 +592,7 @@ if st.session_state.logged_in and st.session_state.role == "admin":
 
 
     st.markdown("---")
+
 
 
 
