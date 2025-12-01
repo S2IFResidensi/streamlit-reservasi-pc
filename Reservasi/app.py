@@ -249,78 +249,72 @@ st.title("APLIKASI RESERVASI KOMPUTER RESIDENSI S2 INFORMATIKA TELU")
 
 st.markdown("---")
 
+col1, col2 = st.columns(2)
 
 st.subheader("Status Ketersediaan Komputer Yang Tersedia")
-
-now = datetime.now()
-current_date = now.date().isoformat()
-current_time = now.strftime("%H:%M")
-
-available = get_available_computers(current_date, current_time)
-
-
-# if available:
-#     st.success("💻 Tersedia: " + ", ".join(available))
-# else:
-#     st.error("🚫 Tidak ada komputer yang tersedia saat ini.")
-
-
-status_data = []
-for pc, spec in COMPUTER_SPECS.items():
-    status = "AVAILABLE" if pc in available else "NOT AVAILABLE"
-    status_style = (
-        "<span style='color:#0FA958;font-weight:bold;'>AVAILABLE</span>"
-        if status == "AVAILABLE" else
-        "<span style='color:#D33A2C;font-weight:bold;'>NOT AVAILABLE</span>"
-    )
-    status_data.append([pc, status_style, spec])
-
-st.markdown("""
-<table>
-    <tr>
-        <th>Komputer</th>
-        <th>Status</th>
-        <th>Spesifikasi</th>
-    </tr>
-""" + "".join([
-    f"<tr><td>{row[0]}</td><td>{row[1]}</td><td>{row[2]}</td></tr>"
-    for row in status_data
-]) + "</table>", unsafe_allow_html=True)
+with col1:
+    now = datetime.now()
+    current_date = now.date().isoformat()
+    current_time = now.strftime("%H:%M")
+    
+    available = get_available_computers(current_date, current_time)
+    
+    status_data = []
+    for pc, spec in COMPUTER_SPECS.items():
+        status = "AVAILABLE" if pc in available else "NOT AVAILABLE"
+        status_style = (
+            "<span style='color:#0FA958;font-weight:bold;'>AVAILABLE</span>"
+            if status == "AVAILABLE" else
+            "<span style='color:#D33A2C;font-weight:bold;'>NOT AVAILABLE</span>"
+        )
+        status_data.append([pc, status_style, spec])
+    
+    st.markdown("""
+    <table>
+        <tr>
+            <th>Komputer</th>
+            <th>Status</th>
+            <th>Spesifikasi</th>
+        </tr>
+    """ + "".join([
+        f"<tr><td>{row[0]}</td><td>{row[1]}</td><td>{row[2]}</td></tr>"
+        for row in status_data
+    ]) + "</table>", unsafe_allow_html=True)
 
 
-st.markdown("---")
+# st.markdown("---")
 
-
-st.subheader("Status Ketersediaan Komputer Yang Tersedia")
-
-st.markdown("#### 📅 Jadwal Booking Komputer 1 Bulan ke Depan")
-
-conn = get_conn()
-c = conn.cursor()
-
-today = datetime.now().date()
-one_month_later = today + timedelta(days=30)
-
-c.execute("""
-    SELECT username, computer_name, start_date, end_date, start_time, end_time
-    FROM reservations
-    WHERE status='APPROVED'
-    AND date(start_date) <= date(?)
-    AND date(end_date) >= date(?)
-    ORDER BY date(start_date), time(start_time)
-""", (one_month_later, today))
-
-month_reservations = c.fetchall()
-conn.close()
-
-if month_reservations:
-    import pandas as pd
-    df = pd.DataFrame(month_reservations, columns=[
-        "User", "Komputer", "Mulai Tanggal", "Selesai Tanggal", "Jam Mulai", "Jam Selesai"
-    ])
-    st.dataframe(df, use_container_width=True)
-else:
-    st.info("Belum ada jadwal booking dalam 1 bulan ke depan.")
+with col2:
+    st.subheader("Status Ketersediaan Komputer Yang Tersedia")
+    
+    st.markdown("#### 📅 Jadwal Booking Komputer 1 Bulan ke Depan")
+    
+    conn = get_conn()
+    c = conn.cursor()
+    
+    today = datetime.now().date()
+    one_month_later = today + timedelta(days=30)
+    
+    c.execute("""
+        SELECT username, computer_name, start_date, end_date, start_time, end_time
+        FROM reservations
+        WHERE status='APPROVED'
+        AND date(start_date) <= date(?)
+        AND date(end_date) >= date(?)
+        ORDER BY date(start_date), time(start_time)
+    """, (one_month_later, today))
+    
+    month_reservations = c.fetchall()
+    conn.close()
+    
+    if month_reservations:
+        import pandas as pd
+        df = pd.DataFrame(month_reservations, columns=[
+            "User", "Komputer", "Mulai Tanggal", "Selesai Tanggal", "Jam Mulai", "Jam Selesai"
+        ])
+        st.dataframe(df, use_container_width=True)
+    else:
+        st.info("Belum ada jadwal booking dalam 1 bulan ke depan.")
 
 st.markdown("---")
 
@@ -592,6 +586,7 @@ if st.session_state.logged_in and st.session_state.role == "admin":
 
 
     st.markdown("---")
+
 
 
 
