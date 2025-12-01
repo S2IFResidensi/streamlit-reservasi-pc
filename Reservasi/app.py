@@ -477,7 +477,7 @@ if st.session_state.logged_in and st.session_state.role == "admin":
                 if st.button("🗑 DELETE", key=f"delete_{rid}"):
                     if delete_reservation(rid):
                         st.success("Reservasi dihapus!")
-                        st.experimental_rerun()
+                        st.rerun()
                     else:
                         st.error("Gagal menghapus!")
 
@@ -538,6 +538,7 @@ if st.session_state.logged_in and st.session_state.role == "admin":
 
 
     st.markdown("---")
+
 
 
 
