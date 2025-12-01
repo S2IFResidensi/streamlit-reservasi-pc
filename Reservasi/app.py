@@ -388,8 +388,8 @@ if st.session_state.logged_in and st.session_state.role == "user":
         st.warning("⚠ Pilih rentang tanggal (mulai & selesai)!")
         st.stop()
 
-# Pilih komputer dari yang tersedia
-computer_name = st.selectbox("Pilih Komputer", available_computers)
+    # Pilih komputer dari yang tersedia
+    computer_name = st.selectbox("Pilih Komputer", available_computers)
 
     if st.button("Ajukan Reservasi"):
         if end_date < start_date:
@@ -592,6 +592,7 @@ if st.session_state.logged_in and st.session_state.role == "admin":
 
 
     st.markdown("---")
+
 
 
 
