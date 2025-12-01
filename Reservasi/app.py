@@ -237,10 +237,10 @@ current_time = now.strftime("%H:%M")
 available = get_available_computers(current_date, current_time)
 
 
-if available:
-    st.success("💻 Tersedia: " + ", ".join(available))
-else:
-    st.error("🚫 Tidak ada komputer yang tersedia saat ini.")
+# if available:
+#     st.success("💻 Tersedia: " + ", ".join(available))
+# else:
+#     st.error("🚫 Tidak ada komputer yang tersedia saat ini.")
 
 
 status_data = []
@@ -264,6 +264,41 @@ st.markdown("""
     f"<tr><td>{row[0]}</td><td>{row[1]}</td><td>{row[2]}</td></tr>"
     for row in status_data
 ]) + "</table>", unsafe_allow_html=True)
+
+
+st.markdown("---")
+
+
+st.subheader("Status Ketersediaan Komputer Yang Tersedia")
+
+st.markdown("### 🔒 Komputer yang Sedang Dipakai Saat Ini")
+
+conn = get_conn()
+c = conn.cursor()
+
+c.execute("""
+    SELECT username, computer_name, start_date, end_date, start_time, end_time
+    FROM reservations
+    WHERE status='APPROVED'
+    AND date(?) BETWEEN date(start_date) AND date(end_date)
+    AND time(?) BETWEEN time(start_time) AND time(end_time)
+    ORDER BY computer_name
+""", (current_date, current_time))
+
+active_reservations = c.fetchall()
+conn.close()
+
+if active_reservations:
+    for user, comp, sdate, edate, stime, etime in active_reservations:
+        st.markdown(f"""
+        <div class="reservation-card">
+            🖥 **{comp}** sedang dipakai oleh **{user}**<br>
+            📅 {sdate} → {edate}<br>
+            ⏱ {stime} - {etime}
+        </div>
+        """, unsafe_allow_html=True)
+else:
+    st.info("Belum ada komputer yang sedang digunakan.")
 
 
 st.markdown("---")
@@ -529,6 +564,7 @@ if st.session_state.logged_in and st.session_state.role == "admin":
 
 
     st.markdown("---")
+
 
 
 
