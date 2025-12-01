@@ -272,7 +272,7 @@ st.markdown("---")
 
 st.subheader("Status Ketersediaan Komputer Yang Tersedia")
 
-st.markdown("### 📅 Jadwal Booking Komputer 1 Bulan ke Depan")
+st.markdown("#### 📅 Jadwal Booking Komputer 1 Bulan ke Depan")
 
 conn = get_conn()
 c = conn.cursor()
@@ -564,6 +564,7 @@ if st.session_state.logged_in and st.session_state.role == "admin":
 
 
     st.markdown("---")
+
 
 
 
