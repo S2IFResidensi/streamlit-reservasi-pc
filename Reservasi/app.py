@@ -371,9 +371,8 @@ if st.session_state.logged_in and st.session_state.role == "user":
             "Pilih rentang tanggal (mulai - selesai)",
             value=(date.today(), date.today())
         )
-    
-    with col2:
         jam_mulai = st.time_input("Jam mulai", value=time(0, 0))
+    with col2:
         jam_selesai = st.time_input("Jam selesai", value=time(23, 59))
     
     # Baris kedua: pilih komputer, sejajar dengan jam selesai
@@ -599,6 +598,7 @@ if st.session_state.logged_in and st.session_state.role == "admin":
 
 
     st.markdown("---")
+
 
 
 
