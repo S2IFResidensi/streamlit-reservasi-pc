@@ -113,10 +113,7 @@ def get_available_computers(current_date, current_time):
         SELECT computer_name FROM reservations
         WHERE status='APPROVED'
         AND date(?) BETWEEN date(start_date) AND date(end_date)
-        AND (
-            (time(start_time) <= time(?) AND time(?) <= time(end_time))
-        )
-    """, (current_date, current_time, current_time))
+    """, (current_date))
 
     booked_computers = [row[0] for row in c.fetchall()]
     conn.close()
@@ -252,9 +249,8 @@ st.subheader("Status Ketersediaan Komputer Yang Tersedia")
 
 now = datetime.now()
 current_date = now.date().isoformat()
-current_time = now.strftime("%H:%M")
 
-available = get_available_computers(current_date, current_time)
+available = get_available_computers(current_date)
 
 status_data = []
 for pc, spec in COMPUTER_SPECS.items():
@@ -542,6 +538,7 @@ if st.session_state.logged_in and st.session_state.role == "admin":
 
 
     st.markdown("---")
+
 
 
 
