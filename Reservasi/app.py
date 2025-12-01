@@ -365,7 +365,7 @@ if st.session_state.logged_in and st.session_state.role == "user":
 
     # col1, col2 = st.columns(2)
     # Baris pertama: tanggal dan jam mulai/selesai
-    col1, col2 = st.columns([2, 2])
+    col1, col2 = st.columns(2)
     with col1:
         tanggal_range = st.date_input(
             "Pilih rentang tanggal (mulai - selesai)",
@@ -374,12 +374,6 @@ if st.session_state.logged_in and st.session_state.role == "user":
         jam_mulai = st.time_input("Jam mulai", value=time(0, 0))
     with col2:
         jam_selesai = st.time_input("Jam selesai", value=time(23, 59))
-    
-    # Baris kedua: pilih komputer, sejajar dengan jam selesai
-    col1, col2 = st.columns([2, 2])
-    with col1:
-        st.write("")  # kosong, agar komputer muncul di kanan
-    with col2:
         if isinstance(tanggal_range, (list, tuple)) and len(tanggal_range) == 2:
             start_date, end_date = tanggal_range
             available_computers = get_available_computers_for_range(
@@ -598,6 +592,7 @@ if st.session_state.logged_in and st.session_state.role == "admin":
 
 
     st.markdown("---")
+
 
 
 
