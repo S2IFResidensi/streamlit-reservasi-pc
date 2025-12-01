@@ -253,7 +253,7 @@ st.markdown("---")
 st.markdown('<h3 style="text-align: center;">Jadwal Komputer Yang Tersedia di Residensi S2 IF</h3>', unsafe_allow_html=True)
 col1, col2 = st.columns(2)
 with col1:
-    st.markdown("#### 📅 Status Komputer ")
+    st.markdown('<h4 style="text-align: center;"> 📅 Status Komputer </h4>', unsafe_allow_html=True)
     now = datetime.now()
     current_date = now.date().isoformat()
     current_time = now.strftime("%H:%M")
@@ -586,6 +586,7 @@ if st.session_state.logged_in and st.session_state.role == "admin":
 
 
     st.markdown("---")
+
 
 
 
