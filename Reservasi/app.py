@@ -262,11 +262,16 @@ st.subheader("Status Ketersediaan Komputer Yang Tersedia")
 # else:
 #     st.error("🚫 Tidak ada komputer yang tersedia saat ini.")
 
+# now = datetime.now()
+# current_date = now.date().isoformat()
+# current_time = now.strftime("%H:%M")
+
+# available = get_available_computers(current_date, current_time)
+
 now = datetime.now()
 current_date = now.date().isoformat()
-current_time = now.strftime("%H:%M")
 
-available = get_available_computers(current_date, current_time)
+available = get_available_computers(current_date)
 
 status_data = []
 for pc, spec in COMPUTER_SPECS.items():
@@ -554,6 +559,7 @@ if st.session_state.logged_in and st.session_state.role == "admin":
 
 
     st.markdown("---")
+
 
 
 
