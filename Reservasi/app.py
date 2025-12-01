@@ -170,6 +170,17 @@ def get_all_users():
     conn.close()
     return rows
 
+def delete_reservation(res_id):
+    conn = get_conn()
+    c = conn.cursor()
+    try:
+        c.execute("DELETE FROM reservations WHERE id=?", (res_id,))
+        conn.commit()
+        return True
+    except:
+        return False
+    finally:
+        conn.close()
 
 def update_reservation_status(res_id, new_status):
     conn = get_conn()
@@ -438,25 +449,38 @@ if st.session_state.logged_in and st.session_state.role == "admin":
 
         for r in rows:
             rid, uname, comp, sdate, edate, stime, etime, status = r
-            col1, col2, col3, col4 = st.columns([1.2, 2, 2, 2])
-
+            col1, col2, col3, col4, col5 = st.columns([1.2, 2, 2, 2, 2])
+        
             with col1:
                 st.write(f"ID: {rid}")
             with col2:
                 st.write(f"{uname} - {comp}")
             with col3:
                 st.write(f"{status}")
+            
+            # Tombol APPROVE
             with col4:
                 if status != "APPROVED":
                     if st.button("✔ APPROVE", key=f"approve_{rid}"):
                         update_reservation_status(rid, "APPROVED")
                         st.success("Reservasi di-approve.")
                         st.rerun()
+        
                 if status != "REJECTED":
                     if st.button("✖ REJECT", key=f"reject_{rid}"):
                         update_reservation_status(rid, "REJECTED")
                         st.warning("Reservasi di-reject.")
                         st.rerun()
+
+            # Tombol DELETE
+            with col5:
+                if st.button("🗑 DELETE", key=f"delete_{rid}"):
+                    if delete_reservation(rid):
+                        st.success("Reservasi dihapus!")
+                        st.experimental_rerun()
+                    else:
+                        st.error("Gagal menghapus!")
+
 
     st.markdown("---")
 
@@ -514,6 +538,7 @@ if st.session_state.logged_in and st.session_state.role == "admin":
 
 
     st.markdown("---")
+
 
 
 
