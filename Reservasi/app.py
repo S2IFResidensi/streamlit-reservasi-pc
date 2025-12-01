@@ -108,21 +108,27 @@ def get_all_reservations(status_filter=None):
 def get_available_computers(current_date, current_time):
     conn = get_conn()
     c = conn.cursor()
-    
-    # ambil reservasi yang bertabrakan dengan hari & jam sekarang
+
     c.execute("""
         SELECT computer_name FROM reservations
-        WHERE status='APPROVED'
-        AND date(?) BETWEEN date(start_date) AND date(end_date)
-        AND time(?) BETWEEN time(start_time) AND time(end_time)
-    """, (current_date, current_time))
-    
+        WHERE status = 'APPROVED'
+        AND (
+            (date(start_date) < date(?) AND date(end_date) > date(?)) -- hari di tengah rentang
+            OR
+            (date(start_date) = date(?) AND time(start_time) <= time(?) AND time(?) <= time(end_time)) -- hari awal
+            OR
+            (date(end_date) = date(?) AND time(start_time) <= time(?) AND time(?) <= time(end_time)) -- hari akhir
+        )
+    """, (current_date, current_date,
+          current_date, current_time, current_time,
+          current_date, current_time, current_time))
+
     booked_computers = [row[0] for row in c.fetchall()]
     conn.close()
 
     all_computers = ["S2IF-1", "S2IF-2", "S2IF-5", "S2IF-6", "S2IF-7", "S2IF-8", "S2IF-9"]
-    available = [pc for pc in all_computers if pc not in booked_computers]
-    return available
+    return [pc for pc in all_computers if pc not in booked_computers]
+
 
 # Tambahkan data spesifikasi komputer
 COMPUTER_SPECS = {
@@ -511,6 +517,7 @@ if st.session_state.logged_in and st.session_state.role == "admin":
 
 
     st.markdown("---")
+
 
 
 
