@@ -291,7 +291,7 @@ else:
         st.session_state.logged_in = False
         st.session_state.username = None
         st.session_state.role = None
-        st.experimental_rerun()
+        st.rerun()
 
 
 st.markdown("---")
@@ -447,12 +447,12 @@ if st.session_state.logged_in and st.session_state.role == "admin":
                     if st.button("✔ APPROVE", key=f"approve_{rid}"):
                         update_reservation_status(rid, "APPROVED")
                         st.success("Reservasi di-approve.")
-                        st.experimental_rerun()
+                        st.rerun()
                 if status != "REJECTED":
                     if st.button("✖ REJECT", key=f"reject_{rid}"):
                         update_reservation_status(rid, "REJECTED")
                         st.warning("Reservasi di-reject.")
-                        st.experimental_rerun()
+                        st.rerun()
 
     st.markdown("---")
 
@@ -504,11 +504,12 @@ if st.session_state.logged_in and st.session_state.role == "admin":
             if st.button("🗑 Hapus", key=f"del_{uname}"):
                 if delete_user(uname):
                     st.success(f"User {uname} berhasil dihapus!")
-                    st.experimental_rerun()
+                    st.rerun()
                 else:
                     st.error("Gagal menghapus user!")
 
 
     st.markdown("---")
+
 
 
