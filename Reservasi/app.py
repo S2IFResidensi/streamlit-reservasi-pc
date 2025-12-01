@@ -316,11 +316,12 @@ if st.session_state.logged_in and st.session_state.role == "user":
         jam_mulai = st.time_input("Jam mulai", value=time(0, 0))
         jam_selesai = st.time_input("Jam selesai", value=time(23, 59))
 
-    if isinstance(tanggal_range, tuple):
+    # Pastikan harus ada 2 tanggal (start & end)
+    if isinstance(tanggal_range, (list, tuple)) and len(tanggal_range) == 2:
         start_date, end_date = tanggal_range
     else:
-        start_date = tanggal_range
-        end_date = tanggal_range
+        st.warning("⚠ Pilih rentang tanggal (mulai & selesai)!")
+        st.stop()
 
     if st.button("Ajukan Reservasi"):
         if end_date < start_date:
@@ -510,6 +511,7 @@ if st.session_state.logged_in and st.session_state.role == "admin":
 
 
     st.markdown("---")
+
 
 
 
