@@ -371,9 +371,9 @@ if st.session_state.logged_in and st.session_state.role == "user":
             "Pilih rentang tanggal (mulai - selesai)",
             value=(date.today(), date.today())
         )
-        jam_mulai = st.time_input("Jam mulai", value=time(0, 0))
+        jam_mulai = st.time_input("Jam Mulai", value=time(0, 0))
     with col2:
-        jam_selesai = st.time_input("Jam selesai", value=time(23, 59))
+        jam_selesai = st.time_input("Jam Selesai", value=time(23, 59))
         if isinstance(tanggal_range, (list, tuple)) and len(tanggal_range) == 2:
             start_date, end_date = tanggal_range
             available_computers = get_available_computers_for_range(
@@ -592,6 +592,7 @@ if st.session_state.logged_in and st.session_state.role == "admin":
 
 
     st.markdown("---")
+
 
 
 
