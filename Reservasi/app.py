@@ -365,30 +365,32 @@ if st.session_state.logged_in and st.session_state.role == "user":
 
     # col1, col2 = st.columns(2)
     col1, col2 = st.columns(2)
-
     with col1:
         tanggal_range = st.date_input(
             "Pilih rentang tanggal (mulai - selesai)",
             value=(date.today(), date.today())
         )
     
-        # Pilih komputer dari yang tersedia
-        if isinstance(tanggal_range, (list, tuple)) and len(tanggal_range) == 2:
-            start_date, end_date = tanggal_range
-            available_computers = get_available_computers_for_range(
-                start_date.isoformat(),
-                end_date.isoformat(),
-                jam_mulai.strftime("%H:%M"),
-                jam_selesai.strftime("%H:%M")
-            )
-            computer_name = st.selectbox("Pilih Komputer", available_computers)
-        else:
-            st.warning("⚠ Pilih rentang tanggal (mulai & selesai)!")
-            st.stop()
-    
     with col2:
         jam_mulai = st.time_input("Jam mulai", value=time(0, 0))
         jam_selesai = st.time_input("Jam selesai", value=time(23, 59))
+    
+    # Pastikan user memilih dua tanggal
+    if isinstance(tanggal_range, (list, tuple)) and len(tanggal_range) == 2:
+        start_date, end_date = tanggal_range
+        available_computers = get_available_computers_for_range(
+            start_date.isoformat(),
+            end_date.isoformat(),
+            jam_mulai.strftime("%H:%M"),
+            jam_selesai.strftime("%H:%M")
+        )
+    else:
+        st.warning("⚠ Pilih rentang tanggal (mulai & selesai)!")
+        st.stop()
+    
+    # Pilih komputer dari yang tersedia
+    computer_name = st.selectbox("Pilih Komputer", available_computers)
+
 
 
     if st.button("Ajukan Reservasi"):
@@ -592,6 +594,7 @@ if st.session_state.logged_in and st.session_state.role == "admin":
 
 
     st.markdown("---")
+
 
 
 
