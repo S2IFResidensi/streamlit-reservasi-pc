@@ -249,7 +249,7 @@ st.title("APLIKASI RESERVASI KOMPUTER RESIDENSI S2 INFORMATIKA TELU")
 
 st.markdown("---")
 
-st.subheader("Jadwal Komputer Yang Tersedia di Residensi S2 IF")
+# st.subheader("Jadwal Komputer Yang Tersedia di Residensi S2 IF")
 st.markdown('<h3 style="text-align: center;">Jadwal Komputer Yang Tersedia di Residensi S2 IF</h3>', unsafe_allow_html=True)
 col1, col2 = st.columns(2)
 with col1:
@@ -586,6 +586,7 @@ if st.session_state.logged_in and st.session_state.role == "admin":
 
 
     st.markdown("---")
+
 
 
 
