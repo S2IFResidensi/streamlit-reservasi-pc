@@ -249,10 +249,10 @@ st.title("APLIKASI RESERVASI KOMPUTER RESIDENSI S2 INFORMATIKA TELU")
 
 st.markdown("---")
 
-st.subheader("Komputer Yang Tersedia di Residensi S2 IF")
+st.subheader("Jadwal Komputer Yang Tersedia di Residensi S2 IF")
 col1, col2 = st.columns(2)
 with col1:
-    st.markdown("#### 📅 Jadwal Status Komputer ")
+    st.markdown("#### 📅 Status Komputer ")
     now = datetime.now()
     current_date = now.date().isoformat()
     current_time = now.strftime("%H:%M")
@@ -286,7 +286,7 @@ with col1:
 
 with col2:
     # st.subheader("Status Ketersediaan Komputer Yang Tersedia")
-    st.markdown("#### 📅 Jadwal Booking Komputer 1 Bulan ke Depan")
+    st.markdown("#### 📅 Booking PC 1 Bulan ke Depan")
     
     conn = get_conn()
     c = conn.cursor()
@@ -585,6 +585,7 @@ if st.session_state.logged_in and st.session_state.role == "admin":
 
 
     st.markdown("---")
+
 
 
 
