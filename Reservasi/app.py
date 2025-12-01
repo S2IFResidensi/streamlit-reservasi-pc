@@ -376,24 +376,22 @@ if st.session_state.logged_in and st.session_state.role == "user":
         jam_mulai = st.time_input("Jam mulai", value=time(0, 0))
         jam_selesai = st.time_input("Jam selesai", value=time(23, 59))
     
-    # Baris kedua: pilih komputer, sejajar dengan jam selesai
+    # Baris kedua: pilih komputer di bawah tanggal, tapi tetap sejajar dengan jam selesai
     col1, col2 = st.columns([2, 2])
     with col1:
-        st.write("")  # kosong, agar komputer muncul di kanan
-    with col2:
-        if isinstance(tanggal_range, (list, tuple)) and len(tanggal_range) == 2:
-            start_date, end_date = tanggal_range
-            available_computers = get_available_computers_for_range(
-                start_date.isoformat(),
-                end_date.isoformat(),
+        computer_name = st.selectbox(
+            "Pilih Komputer",
+            get_available_computers_for_range(
+                tanggal_range[0].isoformat(),
+                tanggal_range[1].isoformat(),
                 jam_mulai.strftime("%H:%M"),
                 jam_selesai.strftime("%H:%M")
             )
-        else:
-            st.warning("⚠ Pilih rentang tanggal (mulai & selesai)!")
-            st.stop()
+        )
     
-        computer_name = st.selectbox("Pilih Komputer", available_computers)
+    with col2:
+        st.write("")  # Kosong, agar komputer tetap sejajar kanan
+    
 
 
     if st.button("Ajukan Reservasi"):
@@ -597,6 +595,7 @@ if st.session_state.logged_in and st.session_state.role == "admin":
 
 
     st.markdown("---")
+
 
 
 
