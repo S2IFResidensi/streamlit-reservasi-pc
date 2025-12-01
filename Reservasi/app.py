@@ -1,6 +1,7 @@
 import streamlit as st
 import sqlite3
 from datetime import datetime, date, time
+from datetime import timedelta
 
 # ------------------ DB SETUP ------------------ #
 def get_conn():
@@ -271,35 +272,34 @@ st.markdown("---")
 
 st.subheader("Status Ketersediaan Komputer Yang Tersedia")
 
-st.markdown("### 🔒 Komputer yang Sedang Dipakai Saat Ini")
+st.markdown("### 📅 Jadwal Booking Komputer 1 Bulan ke Depan")
 
 conn = get_conn()
 c = conn.cursor()
+
+today = datetime.now().date()
+one_month_later = today + timedelta(days=30)
 
 c.execute("""
     SELECT username, computer_name, start_date, end_date, start_time, end_time
     FROM reservations
     WHERE status='APPROVED'
-    AND date(?) BETWEEN date(start_date) AND date(end_date)
-    AND time(?) BETWEEN time(start_time) AND time(end_time)
-    ORDER BY computer_name
-""", (current_date, current_time))
+    AND date(start_date) <= date(?)
+    AND date(end_date) >= date(?)
+    ORDER BY date(start_date), time(start_time)
+""", (one_month_later, today))
 
-active_reservations = c.fetchall()
+month_reservations = c.fetchall()
 conn.close()
 
-if active_reservations:
-    for user, comp, sdate, edate, stime, etime in active_reservations:
-        st.markdown(f"""
-        <div class="reservation-card">
-            🖥 **{comp}** sedang dipakai oleh **{user}**<br>
-            📅 {sdate} → {edate}<br>
-            ⏱ {stime} - {etime}
-        </div>
-        """, unsafe_allow_html=True)
+if month_reservations:
+    import pandas as pd
+    df = pd.DataFrame(month_reservations, columns=[
+        "User", "Komputer", "Mulai Tanggal", "Selesai Tanggal", "Jam Mulai", "Jam Selesai"
+    ])
+    st.dataframe(df, use_container_width=True)
 else:
-    st.info("Belum ada komputer yang sedang digunakan.")
-
+    st.info("Belum ada jadwal booking dalam 1 bulan ke depan.")
 
 st.markdown("---")
 
@@ -564,6 +564,7 @@ if st.session_state.logged_in and st.session_state.role == "admin":
 
 
     st.markdown("---")
+
 
 
 
